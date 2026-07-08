@@ -44,7 +44,7 @@ def add_a_student():
 @app.route("/students/<int:index>", methods=["DELETE"])
 def delete_student(index):
 
-    if index >= len(students):
+    if index < 0 or index >= len(students):
         return jsonify({
             "message": "No such student found"
         }), 404
@@ -54,6 +54,24 @@ def delete_student(index):
         "message": "Student deleted successfully",
         "student": deleted_student
     }), 200
+
+
+@app.route("/students/<int:index>", methods=["PUT"])
+def update_a_student(index):
+
+    if index < 0 or index >= len(students):
+        return jsonify({
+            "message": "No such student found"
+        }), 404
+
+    data = request.get_json()
+    data = list(data.values())[0]
+    students[index] = data
+
+    return jsonify({
+        "message": "student updated successfuly",
+        "username": data
+    }), 201
 
 
 if __name__ == "__main__":
