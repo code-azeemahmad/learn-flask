@@ -15,6 +15,23 @@ def show_all_students():
     return jsonify(students)
 
 
+@app.route("/students/<int:index>", methods=["GET"])
+def get_student(index):
+    if index >= len(students):
+        return jsonify({
+            "message": "No such student found"
+        }), 404
+    else:
+        return jsonify({
+            "username": students[index]
+        }), 200
+    
+
+
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
 
 
 
