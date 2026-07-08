@@ -27,6 +27,20 @@ def get_student(index):
         }), 200
     
 
+@app.route("/students", methods=["POST"])
+def add_a_student():
+
+    data = request.get_json()   # converts that JSON into a Python dictionary.
+    data = list(data.values())[0]   # converts that dictionary into a list and gets the first value.
+
+    students.append(data)
+
+    return jsonify({
+        "message": "student added successfuly",
+        "username": data
+    }), 201
+
+
 
 
 
