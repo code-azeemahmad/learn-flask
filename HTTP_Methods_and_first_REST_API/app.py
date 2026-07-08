@@ -41,7 +41,19 @@ def add_a_student():
     }), 201
 
 
+@app.route("/students/<int:index>", methods=["DELETE"])
+def delete_student(index):
 
+    if index >= len(students):
+        return jsonify({
+            "message": "No such student found"
+        }), 404
+    deleted_student = students.pop(index)
+
+    return jsonify({
+        "message": "Student deleted successfully",
+        "student": deleted_student
+    }), 200
 
 
 if __name__ == "__main__":
