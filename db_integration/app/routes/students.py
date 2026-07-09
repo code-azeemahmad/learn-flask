@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify, Blueprint, render_template
+from flask import request, jsonify, Blueprint, render_template
 from app.models.student import Student
 from app.extensions import db
+from sqlalchemy.exc import SQLAlchemyError
+from flask import current_app
 
 students_bp = Blueprint("student_list", __name__, url_prefix="/students")
 
@@ -42,14 +44,23 @@ def add_student():
         email=data["email"]
     )
 
-    db.session.add(student)
+    try:
 
-    db.session.commit()
+        db.session.add(student)
+        db.session.commit()
 
-    return jsonify({
-        "message": "Student created successfully",
-        "student": student.to_dict()
-    }), 201
+        return jsonify({
+            "message": "Student created successfully",
+            "student": student.to_dict()
+        }), 201
+
+    except SQLAlchemyError:
+        db.session.rollback()
+        current_app.logger.exception("Failed to create student")
+    
+        return jsonify({
+            "message": "Failed to create student"
+        }), 500
 
 
 @students_bp.route("/<int:id>", methods=["DELETE"])
