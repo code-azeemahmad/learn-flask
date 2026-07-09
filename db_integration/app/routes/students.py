@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, Blueprint, render_template
 from app.models.student import Student
+from app.extensions import db
 
 students_bp = Blueprint("student_list", __name__, url_prefix="/students")
 
@@ -25,16 +26,22 @@ def show_all_students():
     return jsonify(student_list)
 
 
-@students_bp.route("/<int:index>", methods=["GET"])
-def get_student(index):
-    if index >= len(student_list):
+@students_bp.route("/<int:id>", methods=["GET"])
+def get_student(id):
+
+    student = db.session.get(Student, id)
+
+    if student is None:
         return jsonify({
-            "message": "No such student found"
+            "message": "Student not found"
         }), 404
-    else:
-        return jsonify({
-            "username": student_list[index]
-        }), 200
+
+    return jsonify({
+        "id": student.id,
+        "name": student.name,
+        "age": student.age,
+        "email": student.email
+    }), 200
     
 
 @students_bp.route("/", methods=["POST"])
