@@ -81,3 +81,30 @@ def update_a_student(index):
         "message": "student updated successfuly",
         "username": data
     }), 201
+
+@students_bp.route("/db-test")
+def db_test():
+    pass
+
+
+''' ORM lifecycle
+Python Object
+      │
+      ▼
+db.session.add()
+      │
+      ▼
+db.session.commit()
+      │
+      ▼
+Database Row
+'''
+''' Query lifecycle
+Database Row
+      │
+      ▼
+Student.query
+      │
+      ▼
+Python Object
+'''
