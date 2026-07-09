@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Learn Flask</title>
+</head>
+
+<body>
+
+<ul>
+
+{% for student in students %}
+
+<li>{{ student }}</li>
+
+{% endfor %}
+
+</ul>
+
+
+</body>
+</html>
+
+<!-- use JinJa comment-->
+{#
+An HTML comment: <!-- comment --> is only ignored by the browser.
+But before the browser sees the HTML, Jinja reads the template and looks for:
+{{ ... }}
+{% ... %}
+everywhere—even inside HTML comments.
+#}
