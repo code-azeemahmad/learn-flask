@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Learn Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<ul>
+
+{% for student in students %}
+
+<li>{{ student }}</li>
+
+{% endfor %}
+
+</ul>
+
+<p>Flask generates the correct path automatically.</p>
+
+<img src="{{ url_for('static', filename='images/logo.png') }}">
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
