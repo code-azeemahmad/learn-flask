@@ -1,15 +1,23 @@
 from app.extensions import db
 
-class Student(db.Model):    # "This isn't just a normal Python class. It represents a database table."
+class Student(db.Model):
+    __tablename__ = "student"
 
     id = db.Column(db.Integer, primary_key=True)
 
-    name = db.Column(db.String(100))
+    name = db.Column(db.String(100), nullable=False)
 
     age = db.Column(db.Integer)
 
-    email = db.Column(db.String(120))
+    email = db.Column(db.String(120), unique=True)
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "age": self.age,
+            "email": self.email
+        }
 
 ''' Object Relational Mapping
 student = Student(
