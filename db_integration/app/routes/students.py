@@ -13,15 +13,7 @@ def show_all_students():
 
     students = Student.query.all()
 
-    student_list = []
-
-    for student in students:
-        student_list.append({
-            "id": student.id,
-            "name": student.name,
-            "age": student.age,
-            "email": student.email
-        })
+    student_list = [student.to_dict() for student in students]
 
     return jsonify(student_list)
 
@@ -36,12 +28,7 @@ def get_student(id):
             "message": "Student not found"
         }), 404
 
-    return jsonify({
-        "id": student.id,
-        "name": student.name,
-        "age": student.age,
-        "email": student.email
-    }), 200
+    return jsonify(student.to_dict())
     
 
 @students_bp.route("/", methods=["POST"])
@@ -61,12 +48,7 @@ def add_student():
 
     return jsonify({
         "message": "Student created successfully",
-        "student": {
-            "id": student.id,
-            "name": student.name,
-            "age": student.age,
-            "email": student.email
-        }
+        "student": student.to_dict()
     }), 201
 
 
@@ -107,19 +89,29 @@ def update_student(id):
 
     return jsonify({
         "message": "Student updated successfully",
-        "student": {
-            "id": student.id,
-            "name": student.name,
-            "age": student.age,
-            "email": student.email
-        }
-    }), 200
+        "student": student.to_dict()
+    })
 
 
 
 @students_bp.route("/db-test")
 def db_test():
     pass
+
+'''
+A Student object already knows everything about itself.
+return jsonify({
+    "message": "Updated",
+    "student": {
+        "id": student.id,
+        "name": student.name,
+        "age": student.age,
+        "email": student.email
+    }
+})
+The highlighted dictionary is repeated everywhere.
+Solution: return jsonify(student.to_dict())
+'''
 
 
 ''' ORM lifecycle
