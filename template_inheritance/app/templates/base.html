@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}Flask App{% endblock %}</title> <!-- A child template may replace this section -->
+  </head>
+
+  <body>
+    <nav>
+      <a href="/">Home</a> | <a href="/about">About</a> | <a href="/students/">Students</a>
+    </nav>
+
+    <!-- A child template may replace this section -->
+    <hr />
+    {% block content %} {% endblock %}
+    <hr />
+
+    <footer>Copyright © 2026</footer>
+  </body>
+</html>
+
+
+<!--
+If you wanted to add one new navigation link, you'd have to edit 100 files.
+
+Instead, create one parent template. templates/base.html
+
+Every page will inherit from it.
+
+               base.html
+                    │
+        ┌───────────┼───────────┐
+        │           │           │
+   index.html   about.html  students.html
+
+The children reuse the parent.
+-->
+
+<!--
+How it works
+When you request: /students/
+
+Flask does this:
+
+students.html
+       ↓
+"I extend base.html"
+       ↓
+Load base.html
+       ↓
+Replace block title
+       ↓
+Replace block content
+       ↓
+Send final HTML
+
+The browser receives one complete HTML document.
+-->
+
+<!-- What is template inheritance in Jinja2? -->
+<!-- Template inheritance allows multiple HTML pages to share a common parent 
+ template. A base template defines the common layout (such as the header, 
+ navigation, and footer), while child templates override specific {% block %} 
+ sections using {% extends %}. This reduces code duplication and makes 
+ Flask applications easier to maintain -->
