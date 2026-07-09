@@ -1,11 +1,13 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()   # Read the .env file and load its contents into the environment.
+load_dotenv()
 
 class Config:
     DEBUG = True
-    SECRET_KEY = str(os.getenv("SECRET_KEY"))   # that environment contains those values, you can ask for one.
+    SECRET_KEY = str(os.getenv("SECRET_KEY"))
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
     DEBUG = True
@@ -15,21 +17,3 @@ class ProductionConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-
-
-'''
-Configuration is information that controls how your 
-application behaves without changing the source code.
-
-Development vs Production
-
-Imagine a user causing an exception.
-Debug mode may expose:
-
-File paths
-Source code
-Installed packages
-Environment details
-
-That's a security risk.
-'''
