@@ -89,14 +89,12 @@ def delete_student(index):
 def update_student(id):
 
     student = db.session.get(Student, id)
-
     if student is None:
         return jsonify({
             "message": "Student not found"
         }), 404
 
     data = request.get_json()
-
     student.name = data["name"]
     student.age = data["age"]
     student.email = data["email"]
