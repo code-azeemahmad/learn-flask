@@ -3,6 +3,7 @@ from flask import Flask
 from app.routes.home import home_bp
 from app.routes.students import students_bp
 from app.error_handlers import register_error_handlers
+from app.extensions import db
 
 def create_app():   # Application Factory Pattern
 
@@ -11,6 +12,8 @@ def create_app():   # Application Factory Pattern
     app = Flask(__name__)
 
     app.config.from_object("app.config.Config")
+
+    db.init_app(app)
 
     app.register_blueprint(home_bp)
     app.register_blueprint(students_bp)
