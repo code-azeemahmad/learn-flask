@@ -45,16 +45,28 @@ def get_student(id):
     
 
 @students_bp.route("/", methods=["POST"])
-def add_a_student():
+def add_student():
 
     data = request.get_json()
-    data = list(data.values())[0]
 
-    student_list.append(data)
+    student = Student(
+        name=data["name"],
+        age=data["age"],
+        email=data["email"]
+    )
+
+    db.session.add(student)
+
+    db.session.commit()
 
     return jsonify({
-        "message": "student added successfuly",
-        "username": data
+        "message": "Student created successfully",
+        "student": {
+            "id": student.id,
+            "name": student.name,
+            "age": student.age,
+            "email": student.email
+        }
     }), 201
 
 
@@ -73,22 +85,35 @@ def delete_student(index):
     }), 200
 
 
-@students_bp.route("/<int:index>", methods=["PUT"])
-def update_a_student(index):
+@students_bp.route("/<int:id>", methods=["PUT"])
+def update_student(id):
 
-    if index < 0 or index >= len(student_list):
+    student = db.session.get(Student, id)
+
+    if student is None:
         return jsonify({
-            "message": "No such student found"
+            "message": "Student not found"
         }), 404
 
     data = request.get_json()
-    data = list(data.values())[0]
-    student_list[index] = data
+
+    student.name = data["name"]
+    student.age = data["age"]
+    student.email = data["email"]
+
+    db.session.commit()
 
     return jsonify({
-        "message": "student updated successfuly",
-        "username": data
-    }), 201
+        "message": "Student updated successfully",
+        "student": {
+            "id": student.id,
+            "name": student.name,
+            "age": student.age,
+            "email": student.email
+        }
+    }), 200
+
+
 
 @students_bp.route("/db-test")
 def db_test():
