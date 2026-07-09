@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}Flask App{% endblock %}</title> <!-- A child template may replace this section -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+
+  <body>
+
+       {% with messages = get_flashed_messages(with_categories=True) %}
+
+              {% for category, message in messages %}
+
+                     <p class="{{ category }}" id="flash-message">
+                            {{ message }}
+                     </p>
+
+              {% endfor %}
+
+       {% endwith %}
+
+    <nav>
+      <a href="/">Home</a> | <a href="/about">About</a> | <a href="/contact">Contact</a> | <a href="/students/">Students</a>
+    </nav>
+
+    <!-- A child template may replace this section -->
+    <hr />
+    {% block content %} {% endblock %}
+    <hr />
+
+    <footer>Copyright © 2026</footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  </body>
+</html>
+
+{#
+The redirect works. But... How does the user know the form was submitted successfully?
+#}
+
+{#
+What are Flash Messages? Flash messages are temporary messages stored by Flask.
+
+Example:
+Student added successfully.
+Login successful.
+Password changed.
+Invalid email.
+Access denied.
+
+These messages exist for one request only. After being displayed once...
+They're automatically removed. Flask supports categories.
+#}
