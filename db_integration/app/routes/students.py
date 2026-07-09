@@ -1,48 +1,49 @@
 from flask import Flask, request, jsonify, Blueprint, render_template
+from app.models.student import Student
+
+students_bp = Blueprint("student_list", __name__, url_prefix="/students")
 
 
-students_bp = Blueprint("students", __name__, url_prefix="/students")
-
-students = [
-"Ali",
-"Azeem",
-"Ahmed",
-"John"
-]
-
-@students_bp.route("/")
-def home_students():
-    return render_template(
-    "students.html",
-    students=students
-)
+student_list = []
 
 
 @students_bp.route("/api", methods=["GET"])
 def show_all_students():
 
-    return jsonify(students)
+    students = Student.query.all()
+
+    student_list = []
+
+    for student in students:
+        student_list.append({
+            "id": student.id,
+            "name": student.name,
+            "age": student.age,
+            "email": student.email
+        })
+
+    return jsonify(student_list)
 
 
 @students_bp.route("/<int:index>", methods=["GET"])
 def get_student(index):
-    if index >= len(students):
+    if index >= len(student_list):
         return jsonify({
             "message": "No such student found"
         }), 404
     else:
         return jsonify({
-            "username": students[index]
+            "username": student_list[index]
         }), 200
     
 
 @students_bp.route("/", methods=["POST"])
 def add_a_student():
 
-    data = request.get_json()   # converts that JSON into a Python dictionary.
-    data = list(data.values())[0]   # converts that dictionary into a list and gets the first value.
+    data = request.get_json()
+    data = list(data.values())[0]
 
-    students.append(data)
+    student_list.append(data)
 
     return jsonify({
         "message": "student added successfuly",
@@ -53,11 +54,11 @@ def add_a_student():
 @students_bp.route("/<int:index>", methods=["DELETE"])
 def delete_student(index):
 
-    if index < 0 or index >= len(students):
+    if index < 0 or index >= len(student_list):
         return jsonify({
             "message": "No such student found"
         }), 404
-    deleted_student = students.pop(index)
+    deleted_student = student_list.pop(index)
 
     return jsonify({
         "message": "Student deleted successfully",
@@ -68,14 +69,14 @@ def delete_student(index):
 @students_bp.route("/<int:index>", methods=["PUT"])
 def update_a_student(index):
 
-    if index < 0 or index >= len(students):
+    if index < 0 or index >= len(student_list):
         return jsonify({
             "message": "No such student found"
         }), 404
 
     data = request.get_json()
     data = list(data.values())[0]
-    students[index] = data
+    student_list[index] = data
 
     return jsonify({
         "message": "student updated successfuly",
