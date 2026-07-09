@@ -70,18 +70,22 @@ def add_student():
     }), 201
 
 
-@students_bp.route("/<int:index>", methods=["DELETE"])
-def delete_student(index):
+@students_bp.route("/<int:id>", methods=["DELETE"])
+def delete_student(id):
 
-    if index < 0 or index >= len(student_list):
+    student = db.session.get(Student, id)
+
+    if student is None:
         return jsonify({
-            "message": "No such student found"
+            "message": "Student not found"
         }), 404
-    deleted_student = student_list.pop(index)
+
+    db.session.delete(student)
+
+    db.session.commit()
 
     return jsonify({
-        "message": "Student deleted successfully",
-        "student": deleted_student
+        "message": "Student deleted successfully"
     }), 200
 
 
