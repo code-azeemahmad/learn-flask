@@ -3,7 +3,11 @@ from app.models.student import Student
 from app.extensions import db
 from sqlalchemy.exc import SQLAlchemyError
 from flask import current_app
-from app.validators.student_validator import StudentValidator
+from app.schemas.student_schema import (
+    student_schema,
+    students_schema
+)
+from marshmallow import ValidationError
 
 students_bp = Blueprint("student_list", __name__, url_prefix="/students")
 
@@ -34,39 +38,22 @@ def get_student(id):
     return jsonify(student.to_dict())
     
 
-@students_bp.route("/", methods=["POST"])
+@students_bp.route("/", methods=["POST"])   # cleanest route (error handling, validations, normalization)
 def add_student():
 
     data = request.get_json()
 
-    data = StudentValidator.normalize(data)
-    errors = StudentValidator.validate(data)
+    validated_data = student_schema.load(data)
 
-    if errors:
-        return jsonify({"errors": errors}), 400
-    
-    student = Student(
-        name=data["name"],
-        age=data["age"],
-        email=data["email"]
-    )
+    student = Student(**validated_data)
 
-    try:
-        db.session.add(student)
-        db.session.commit()
+    db.session.add(student)
+    db.session.commit()
 
-        return jsonify({
-            "message": "Student created successfully",
-            "student": student.to_dict()
-        }), 201
-
-    except SQLAlchemyError:
-        db.session.rollback()
-        current_app.logger.exception("Failed to create student")
-
-        return jsonify({
-            "message": "Failed to create student"
-        }), 500
+    return jsonify({
+        "message": "Student created successfully",
+        "student": student.to_dict()
+    }), 201
 
 
 @students_bp.route("/<int:id>", methods=["DELETE"])
