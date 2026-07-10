@@ -19,3 +19,4 @@ Werkzeug==3.1.8
 marshmallow==4.3.0
 Flask-Bcrypt==1.0.1 
 bcrypt==5.0.0
+Flask-Login==0.6.3
