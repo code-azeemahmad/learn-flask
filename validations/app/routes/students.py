@@ -3,6 +3,7 @@ from app.models.student import Student
 from app.extensions import db
 from sqlalchemy.exc import SQLAlchemyError
 from flask import current_app
+from app.validators.student_validator import StudentValidator
 
 students_bp = Blueprint("student_list", __name__, url_prefix="/students")
 
@@ -38,11 +39,18 @@ def add_student():
 
     data = request.get_json()
 
+    errors = StudentValidator.validate(data)
+
+    if errors:
+        return jsonify({"errors": errors}), 400
+
     # Extract values safely
     name = data.get("name")
     age = data.get("age")
     email = data.get("email")
-    
+
+
+
     student = Student(
         name=name.strip(),
         age=age,
