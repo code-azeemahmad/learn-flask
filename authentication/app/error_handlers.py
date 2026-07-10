@@ -2,6 +2,7 @@ from flask import render_template, jsonify, current_app
 from sqlalchemy.exc import SQLAlchemyError
 from app.extensions import db
 from marshmallow import ValidationError
+from werkzeug.exceptions import NotFound
 
 
 def register_error_handlers(app):
@@ -30,21 +31,20 @@ def register_error_handlers(app):
             "errors": error.messages
         }), 400
 
+    @app.errorhandler(NotFound)
+    def handle_not_found(error):
+
+        return jsonify({
+            "message": error.description
+        }), 404
+    
 '''
-Error Handler? An error handler is a function that Flask automatically 
-calls when a particular HTTP error occurs.
+Now every service can simply: raise NotFound("Student not found.")
 
-Instead of Flask's default error page: 404 Not Found
-you can decide what the user sees.
+instead of every route repeating:
 
-@app.route("/divide")
-def divide():
-    return str(10 / 0)
-
-When someone visits: /divide
-
-Python raises: ZeroDivisionError
-
-Flask converts that into: 500 Internal Server Error
-
+if student is None:
+    return jsonify({
+        "message": "Student not found"
+    }), 404
 '''
