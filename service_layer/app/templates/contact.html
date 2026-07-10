@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+
+Contact
+
+{% endblock%}
+
+{% block content %}
+
+<form action={{ url_for("home.submit") }} method="POST">   <!-- Send the data using the POST HTTP method. -->
+
+    <div>
+        <label>Name</label>
+        <input
+        type="text"
+        name="name"
+        required
+    >
+    </div>
+    <div>
+        <label>Email</label>
+        <input
+        type="text"
+        name="email"
+        required
+    >
+    </div>
+
+    <button type="submit">
+        Submit
+    </button>
+
+</form>
+
+{% endblock%}
+
+
+{#
+Flask does not care about: id="name"
+or
+placeholder="Enter name"
+The browser sends only the name attribute.
+#}
