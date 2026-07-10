@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+Server Error
+{% endblock %}
+
+{% block content %}
+
+<h1>500 - Internal Server Error</h1>
+
+<p>Something went wrong on our side.</p>
+
+<p>Please try again later.</p>
+
+{% endblock %}
+
+
+{#
+If you're building an AI-powered application later:
+
+A user requests a model that doesn't exist → return a custom 404.
+Your database is temporarily unavailable → show a friendly 500 page instead of a traceback.
+Your homepage, navigation, and styling still come from base.html, so even error pages match the rest of your site.
+#}
