@@ -28,6 +28,23 @@ class StudentValidator:
             ]
             return errors   # guard clause
         
+        '''Single Responsibility Principle (Applied to Methods)
+        Leading Underscore (_)? This is an internal implementation detail.
+
+        validate() is the public API.
+        _validate_name() is only used internally.
+        '''
+
+        StudentValidator._validate_name(data, errors)
+        StudentValidator._validate_age(data, errors)
+        StudentValidator._validate_email(data, errors)
+        
+        return errors
+    
+
+
+    @staticmethod
+    def _validate_name(data, errors):
         # validate name
         name = data.get("name")
         if not name or not name.strip():
@@ -36,13 +53,17 @@ class StudentValidator:
                 "name",
                 "name is required"
             )
-        if len(name) > 16:
-            StudentValidator.add_error(
-                errors,
-                "name",
-                "name should have required length (<16 char)"
-            )
+        if name:
+            if len(name) > 16:
+                StudentValidator.add_error(
+                    errors,
+                    "name",
+                    "name should have required length (<16 char)"
+                )
+    
 
+    @staticmethod
+    def _validate_age(data, errors):
         # validate age
         age = data.get("age")
         if age is None:
@@ -63,7 +84,10 @@ class StudentValidator:
                 "age",
                 "age should be positive"
             )   
+    
 
+    @staticmethod  
+    def _validate_email(data, errors):
         # validate email
         email = data.get("email")
         if not email or not email.strip():
@@ -77,9 +101,8 @@ class StudentValidator:
                 errors,
                 "email",
                 "email should contain @example.com"
-            )   
+            )
 
-        return errors
 
 
 '''
