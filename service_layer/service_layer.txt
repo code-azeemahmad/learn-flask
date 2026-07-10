@@ -1,0 +1,44 @@
+Business logic: is the rules and actions that make your application work.
+
+Examples:
+- Register a user
+- Create a student
+- Enroll a student in a course
+- Transfer money
+- Generate an invoice
+- Calculate grades
+- Send a welcome email
+- Hash a password
+
+Notice something. None of these involve HTTP. They are application behaviors.
+
+____________________________________________________________________________
+
+Today, students are created through: HTTP Request
+Tomorrow, maybe you add:
+
+- A command-line script
+- A scheduled background job
+- A CSV import feature
+- A message queue consumer
+
+All of these need to create students.
+
+Without a service layer, every place would duplicate:
+
+student = Student(...)
+db.session.add(student)
+db.session.commit()
+
+Duplication leads to bugs and maintenance headaches.
+
+____________________________________________________________________________
+
+A Real Example
+Imagine six months from now you decide: Every new student should receive a welcome email.
+
+Without a service layer, you'd edit every route that creates students.
+
+____________________________________________________________________________
+
+Single Resposibility Principle (SRP) A route should handle HTTP request and responses only
