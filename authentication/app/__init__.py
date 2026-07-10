@@ -4,8 +4,13 @@ from app.routes.home import home_bp
 from app.routes.students import students_bp
 from app.routes.auth import auth_bp
 from app.error_handlers import register_error_handlers
-from app.extensions import db, migrate, bcrypt
 from app.models.student import Student
+from app.extensions import (
+    db,
+    migrate,
+    bcrypt,
+    login_manager
+)
 
 def create_app():
 
@@ -24,5 +29,10 @@ def create_app():
     register_error_handlers(app)
 
     bcrypt.init_app(app)
+    login_manager.init_app(app)
+
+    login_manager.login_view = "auth.login"
+    login_manager.login_message = "Please log in to access this page."
+    login_manager.login_message_category = "warning"
     
     return app
