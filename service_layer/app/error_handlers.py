@@ -18,9 +18,7 @@ def register_error_handlers(app):
 
     @app.errorhandler(SQLAlchemyError)
     def handle_database_error(error):
-        db.session.rollback()
-
-        current_app.logger.exception("Database error")
+        current_app.logger.exception("Database error")  # create_student service is responsible for rollback
 
         return jsonify({
             "message": "A database error occurred."
