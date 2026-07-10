@@ -1,0 +1,38 @@
+Session Authentication
+
+The server remembers users.
+
+Browser
+    │
+    ▼
+Cookie
+    │
+    ▼
+Server Session
+_________________________________
+JWT Authentication
+
+The client remembers everything.
+
+Browser
+    │
+    ▼
+JWT Token
+    │
+    ▼
+Server Verifies
+_________________________________
+
+Responsibilities of Flask-Login (Persistent Authentication)
+
+It provides:
+- Login sessions
+- Logout
+- Current user
+- Protected routes
+- Remember me
+- Session restoration
+
+_________________________________
+Session vs Cookie
+_________________________________
