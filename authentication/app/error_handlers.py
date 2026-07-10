@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from app.extensions import db
 from marshmallow import ValidationError
 from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import Unauthorized
 
 
 def register_error_handlers(app):
@@ -37,6 +38,14 @@ def register_error_handlers(app):
         return jsonify({
             "message": error.description
         }), 404
+    
+
+    @app.errorhandler(Unauthorized)
+    def handle_unauthorized(error):
+
+        return jsonify({
+            "message": error.description
+        }), 401
     
 '''
 Now every service can simply: raise NotFound("Student not found.")
