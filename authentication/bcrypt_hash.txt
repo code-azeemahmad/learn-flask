@@ -1,0 +1,33 @@
+"During Sign up"
+User Password
+        │
+        ▼
+Generate Random Salt
+        │
+        ▼
+Combine Password + Salt
+        │
+        ▼
+bcrypt Hash
+        │
+        ▼
+Store Hash (which includes the salt information)
+
+
+"During Log in"
+Entered Password
+        │
+        ▼
+Extract Salt Information
+        │
+        ▼
+bcrypt Hash
+        │
+        ▼
+Compare With Stored Hash
+        │
+        ▼
+Match?
+        │
+   Yes → Authenticated
+    No → Reject Login
