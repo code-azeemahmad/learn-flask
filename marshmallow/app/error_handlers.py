@@ -1,6 +1,7 @@
 from flask import render_template, jsonify, current_app
 from sqlalchemy.exc import SQLAlchemyError
 from app.extensions import db
+from marshmallow import ValidationError
 
 
 def register_error_handlers(app):
@@ -24,6 +25,12 @@ def register_error_handlers(app):
         return jsonify({
             "message": "A database error occurred."
         }), 500
+    
+    @app.errorhandler(ValidationError)
+    def handle_validation_error(error):
+        return jsonify({
+            "errors": error.messages
+        }), 400
 
 '''
 Error Handler? An error handler is a function that Flask automatically 
