@@ -7,6 +7,8 @@ from app.schemas.response_schema import (
     users_response_schema
 )
 
+from flask_login import login_user
+
 
 auth_bp = Blueprint(
     "auth",
@@ -36,6 +38,8 @@ def login():
     validated_data = user_schema.load(request.get_json())
 
     user = UserService.login(validated_data)
+
+    login_user(user)
 
     return jsonify({
         "message": "Login successful.",

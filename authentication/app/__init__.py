@@ -12,6 +12,8 @@ from app.extensions import (
     login_manager
 )
 
+from app.login_setup import init_login_manager
+
 def create_app():
 
     app = Flask(__name__)
@@ -29,9 +31,9 @@ def create_app():
     register_error_handlers(app)
 
     bcrypt.init_app(app)
-    login_manager.init_app(app)
 
-    import app.login_manager    # importing a module we never use
+    login_manager.init_app(app)
+    init_login_manager()
 
     login_manager.login_view = "auth.login"
     login_manager.login_message = "Please log in to access this page."

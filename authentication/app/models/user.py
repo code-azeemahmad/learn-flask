@@ -30,12 +30,6 @@ class User(UserMixin, db.Model):
         default="student"
     )
 
-    student = db.relationship(
-        "Student",
-        back_populates="user",
-        uselist=False
-    )
-
 '''
 User
 -----
