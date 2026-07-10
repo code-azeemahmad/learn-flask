@@ -1,0 +1,28 @@
+Schema: A schema is simply a blueprint describing what valid data looks like.
+
+Validation Today
+
+    Right now your code probably looks like this:
+    if age is None:
+        ...
+    elif not isinstance(age, int):
+        ...
+    elif age < 0:
+        ...
+    That's procedural programming.
+
+Validation with Marshmallow
+
+    age = Integer(
+        required=True,
+        validate=Range(min=0)
+    )
+
+    That's declarative programming.
+
+remove app/validators
+
+pip install marshmallow
+
+Marshmallow doesn't require initialization.
+It's a standalone Python library.
