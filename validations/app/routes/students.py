@@ -38,50 +38,11 @@ def add_student():
 
     data = request.get_json()
 
-    # Request body validation
-    if not data:
-        return jsonify({
-            "message": "Request body is required"
-        }), 400
-
     # Extract values safely
     name = data.get("name")
     age = data.get("age")
     email = data.get("email")
-
-    # Name validation
-    if not name or not name.strip():
-        return jsonify({
-            "message": "Name is required"
-        }), 400
-
-    # Age validation
-    if age is None:
-        return jsonify({
-            "message": "Age is required"
-        }), 400
-
-    if not isinstance(age, int):
-        return jsonify({
-            "message": "Age must be an integer"
-        }), 400
-
-    if age < 0:
-        return jsonify({
-            "message": "Age cannot be negative"
-        }), 400
-
-    # Email validation
-    if not email or not email.strip():
-        return jsonify({
-            "message": "Email is required"
-        }), 400
-
-    if "@" not in email:
-        return jsonify({
-            "message": "Invalid email address"
-        }), 400
-
+    
     student = Student(
         name=name.strip(),
         age=age,
