@@ -12,6 +12,39 @@ class StudentValidator:
                 "Request body is required."
             ]
             return errors   # guard clause
+        
+        # validate name
+        name = data.get("name")
+        if not name or not name.strip():
+            errors["name"] = [
+                "Name is required."
+            ]
+
+        # validate age
+        age = data.get("age")
+        if age is None:
+            errors["age"] = [
+                "Age is required."
+            ]       
+        elif not isinstance(age, int):
+            errors["age"] = [
+                "Age must be an integer."
+            ]
+        elif age < 0:
+            errors["age"] = [
+                "Age cannot be negative."
+            ]
+
+        # validate email
+        email = data.get("email")
+        if not email or not email.strip():
+            errors["email"] = [
+                "Email is required."
+            ]
+        elif "@" not in email:
+            errors["email"] = [
+                "Invalid email address."
+            ]
 
         return errors
 

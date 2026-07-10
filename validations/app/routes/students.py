@@ -43,20 +43,13 @@ def add_student():
 
     if errors:
         return jsonify({"errors": errors}), 400
-
-    # Extract values safely
-    name = data.get("name")
-    age = data.get("age")
-    email = data.get("email")
-
-
-
+    
     student = Student(
-        name=name.strip(),
-        age=age,
-        email=email.strip()
+        name=data["name"],
+        age=data["age"],
+        email=data["email"]
     )
-
+    
     try:
         db.session.add(student)
         db.session.commit()
