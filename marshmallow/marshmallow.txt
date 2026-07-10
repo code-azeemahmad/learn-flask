@@ -26,3 +26,42 @@ pip install marshmallow
 
 Marshmallow doesn't require initialization.
 It's a standalone Python library.
+
+
+client sends data into your application (load)
+JSON
+↓
+Schema
+↓
+Python Dictionary
+student_schema.load(data)
+
+requests data out of your application (dunmp)
+Python Object
+↓
+Schema
+↓
+JSON-friendly Dictionary
+student_schema.dump(student)
+
+
+Marshmallow returns a Python dictionary.
+This separation of responsibilities is important:
+- Marshmallow: Python objects ↔ Python dictionaries.
+- Flask: Python dictionaries → JSON over HTTP.
+
+If validation fails, ValidationError is raised.
+
+
+load()
+- Used for incoming data.
+- Validates.
+- Deserializes.
+- Returns validated Python data.
+- Raises ValidationError if invalid.
+
+dump()
+- Used for outgoing data.
+- Serializes Python objects.
+- Returns Python dictionaries.
+- Flask's jsonify() turns those dictionaries into JSON.
