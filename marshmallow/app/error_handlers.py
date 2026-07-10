@@ -1,18 +1,29 @@
-from flask import render_template
-from flask import current_app
+from flask import render_template, jsonify, current_app
+from sqlalchemy.exc import SQLAlchemyError
+from app.extensions import db
+
 
 def register_error_handlers(app):
 
-    @app.errorhandler(404)  # if a user visits this route /bookssss
+    @app.errorhandler(404)
     def not_found(error):
-        current_app.logger.info("Unexpected exception")
+        current_app.logger.info("404 - Page not found")
         return render_template("404.html"), 404
 
-    @app.errorhandler(500)  # /divide
+    @app.errorhandler(500)
     def internal_error(error):
-        current_app.logger.info("Unexpected exception")
+        current_app.logger.exception("Unexpected exception")
         return render_template("500.html"), 500
 
+    @app.errorhandler(SQLAlchemyError)
+    def handle_database_error(error):
+        db.session.rollback()
+
+        current_app.logger.exception("Database error")
+
+        return jsonify({
+            "message": "A database error occurred."
+        }), 500
 
 '''
 Error Handler? An error handler is a function that Flask automatically 
