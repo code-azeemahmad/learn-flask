@@ -31,6 +31,8 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
 
+    import app.login_manager    # importing a module we never use
+
     login_manager.login_view = "auth.login"
     login_manager.login_message = "Please log in to access this page."
     login_manager.login_message_category = "warning"
