@@ -1,5 +1,5 @@
 from sqlalchemy.exc import SQLAlchemyError
-from werkzeug.exceptions import Conflict
+from werkzeug.exceptions import Conflict, Unauthorized
 
 from app.extensions import db, bcrypt
 from app.models.user import User
@@ -36,3 +36,21 @@ class UserService:
         except SQLAlchemyError:
             db.session.rollback()
             raise
+
+    @staticmethod
+    def login(data):
+
+        user = User.query.filter_by(
+            email=data["email"]
+        ).first()
+
+        if user is None:
+            raise Unauthorized("Invalid email or password.")
+
+        if not bcrypt.check_password_hash(
+            user.password_hash,
+            data["password"]
+        ):
+            raise Unauthorized("Invalid email or password.")
+
+        return user
