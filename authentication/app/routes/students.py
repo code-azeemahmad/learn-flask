@@ -1,45 +1,36 @@
-from flask import request, jsonify, Blueprint, render_template
-from app.models.student import Student
-from app.extensions import db
-from sqlalchemy.exc import SQLAlchemyError
-from flask import current_app
+from flask import Blueprint, jsonify, request
+
 from app.schemas.student_schema import (
     student_schema,
     students_schema
 )
 from app.services.student_service import StudentService
-from marshmallow import ValidationError
-
-students_bp = Blueprint("student_list", __name__, url_prefix="/students")
 
 
-student_list = []
+students_bp = Blueprint(
+    "student_list",
+    __name__,
+    url_prefix="/students"
+)
 
 
-@students_bp.route("/api", methods=["GET"])
+@students_bp.route("/", methods=["GET"])
 def show_all_students():
 
-    students = Student.query.all()
+    students = StudentService.get_all_students()
 
-    student_list = [student.to_dict() for student in students]
-
-    return jsonify(student_list)
+    return jsonify(students_schema.dump(students))
 
 
 @students_bp.route("/<int:id>", methods=["GET"])
 def get_student(id):
 
-    student = db.session.get(Student, id)
+    student = StudentService.get_student(id)
 
-    if student is None:
-        return jsonify({
-            "message": "Student not found"
-        }), 404
+    return jsonify(student_schema.dump(student))
 
-    return jsonify(student.to_dict())
-    
 
-@students_bp.route("/", methods=["POST"])   # cleanest route (error handling, validations, normalization, SRP)
+@students_bp.route("/", methods=["POST"])
 def add_student():
 
     data = request.get_json()
@@ -50,52 +41,30 @@ def add_student():
 
     return jsonify({
         "message": "Student created successfully",
-        "student": student.to_dict()
+        "student": student_schema.dump(student)
     }), 201
-
-
-@students_bp.route("/<int:id>", methods=["DELETE"])
-def delete_student(id):
-
-    student = db.session.get(Student, id)
-
-    if student is None:
-        return jsonify({
-            "message": "Student not found"
-        }), 404
-
-    db.session.delete(student)
-
-    db.session.commit()
-
-    return jsonify({
-        "message": "Student deleted successfully"
-    }), 200
 
 
 @students_bp.route("/<int:id>", methods=["PUT"])
 def update_student(id):
 
-    student = db.session.get(Student, id)
-    if student is None:
-        return jsonify({
-            "message": "Student not found"
-        }), 404
-
     data = request.get_json()
-    student.name = data["name"]
-    student.age = data["age"]
-    student.email = data["email"]
 
-    db.session.commit()
+    validated_data = student_schema.load(data)
+
+    student = StudentService.update_student(id, validated_data)
 
     return jsonify({
         "message": "Student updated successfully",
-        "student": student.to_dict()
+        "student": student_schema.dump(student)
     })
 
 
+@students_bp.route("/<int:id>", methods=["DELETE"])
+def delete_student(id):
 
-@students_bp.route("/db-test")
-def db_test():
-    pass
+    StudentService.delete_student(id)
+
+    return jsonify({
+        "message": "Student deleted successfully"
+    }), 200
