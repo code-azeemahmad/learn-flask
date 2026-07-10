@@ -9,6 +9,8 @@ from app.schemas.response_schema import (
 
 from flask_login import login_user
 
+from flask_login import current_user
+
 
 auth_bp = Blueprint(
     "auth",
@@ -45,6 +47,21 @@ def login():
         "message": "Login successful.",
         "user": user_response_schema.dump(user)
     }), 200
+
+@auth_bp.route("/me", methods=["GET"])
+def me():
+
+    if current_user.is_authenticated:
+        return jsonify({
+            "authenticated": True,
+            "id": current_user.id,
+            "email": current_user.email,
+            "role": current_user.role
+        })
+
+    return jsonify({
+        "authenticated": False
+    }), 401
 
 
 
