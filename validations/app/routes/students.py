@@ -39,6 +39,7 @@ def add_student():
 
     data = request.get_json()
 
+    data = StudentValidator.normalize(data)
     errors = StudentValidator.validate(data)
 
     if errors:
@@ -49,7 +50,7 @@ def add_student():
         age=data["age"],
         email=data["email"]
     )
-    
+
     try:
         db.session.add(student)
         db.session.commit()

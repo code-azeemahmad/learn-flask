@@ -3,6 +3,40 @@
 
 class StudentValidator:
 
+    ''' Cleaning the data fro "   Azeem  " to "azeem"
+    This process is called normalization
+    app/normalizers/student_normalizer.py
+    '''
+
+    @staticmethod
+    def normalize(data):
+        if not data:
+            return {}
+
+        normalized = data.copy()
+
+        # Normalize name
+        if "name" in normalized and isinstance(normalized["name"], str):
+            normalized["name"] = " ".join(
+                normalized["name"].strip().split()
+            )
+
+        # Normalize email
+        if "email" in normalized and isinstance(normalized["email"], str):
+            normalized["email"] = normalized["email"].strip().lower()
+
+        # Normalize age
+        if "age" in normalized:
+            age = normalized["age"]
+
+            if isinstance(age, str):
+                age = age.strip()
+
+                if age.isdigit():
+                    normalized["age"] = int(age)
+
+        return normalized
+
     '''DRY Principle
     A field can have multiple validation messages
     Append errors.
