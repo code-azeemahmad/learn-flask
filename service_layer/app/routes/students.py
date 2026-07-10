@@ -7,6 +7,7 @@ from app.schemas.student_schema import (
     student_schema,
     students_schema
 )
+from app.services.student_service import StudentService
 from marshmallow import ValidationError
 
 students_bp = Blueprint("student_list", __name__, url_prefix="/students")
@@ -38,17 +39,14 @@ def get_student(id):
     return jsonify(student.to_dict())
     
 
-@students_bp.route("/", methods=["POST"])   # cleanest route (error handling, validations, normalization)
+@students_bp.route("/", methods=["POST"])   # cleanest route (error handling, validations, normalization, SRP)
 def add_student():
 
     data = request.get_json()
 
     validated_data = student_schema.load(data)
 
-    student = Student(**validated_data)
-
-    db.session.add(student)
-    db.session.commit()
+    student = StudentService.create_student(validated_data)
 
     return jsonify({
         "message": "Student created successfully",
@@ -101,41 +99,3 @@ def update_student(id):
 @students_bp.route("/db-test")
 def db_test():
     pass
-
-'''
-A Student object already knows everything about itself.
-return jsonify({
-    "message": "Updated",
-    "student": {
-        "id": student.id,
-        "name": student.name,
-        "age": student.age,
-        "email": student.email
-    }
-})
-The highlighted dictionary is repeated everywhere.
-Solution: return jsonify(student.to_dict())
-'''
-
-
-''' ORM lifecycle
-Python Object
-      │
-      ▼
-db.session.add()
-      │
-      ▼
-db.session.commit()
-      │
-      ▼
-Database Row
-'''
-''' Query lifecycle
-Database Row
-      │
-      ▼
-Student.query
-      │
-      ▼
-Python Object
-'''
